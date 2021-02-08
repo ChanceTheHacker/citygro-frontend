@@ -10,9 +10,10 @@ export default new Vuex.Store({
   state: {
     // just storing the userID here, will implement actual auth later to keep tokens secret
     // needless to say, but don't have any private conversations here... This is not secure
-    // userId: "9049ba9f-8004-4f29-b038-757e463eab03",
-    userId: "",
-    conversations: {},
+    
+    // userId: "",
+    userId: "9049ba9f-8004-4f29-b038-757e463eab03",
+    conversations: {default: true},
     tracking: 0,
     activeConvo: "18326597981",
     thisPhoneNumber: "16178551376",
@@ -39,7 +40,7 @@ export default new Vuex.Store({
       return userId ? true : false
     },
     async setActiveConvo(state, info){
-      return setActiveConvo(state, info)
+      return state.commit("setActiveConvo", info)
     },
     async initialize(state){
       const info = {id: this.state.userId}

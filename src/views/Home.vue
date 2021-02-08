@@ -19,7 +19,7 @@ export default {
   name: "Home",
   components: {},
   data: () => ({
-    messages: [],
+    // messages: [],
   }),
   created: function() {
     this.initialize(),
@@ -27,20 +27,23 @@ export default {
       (this.autoSync = setInterval(() => this.syncMessages(), 15000));
   },
   computed: {
-    // leftOrRight: function() {
-    //   console.log(this);
-    //   if (this.to_phone === "16178551376") {
-    //     return { width: "60%" };
-    //   } else {
-    //     return { width: "60%", marginLeft: "40%" };
-    //   }
-    // },
+    activeConvo() {
+      return store.state.activeConvo;
+    },
+    messages() {
+      const { conversations, activeConvo } = store.state;
+      if (!conversations.default) {
+        const messages = conversations[activeConvo].messages;
+        return messages;
+      } else return { messages: [] };
+    },
   },
   methods: {
     initialize: async function() {
       try {
         const data = await store.dispatch("initialize");
-        this.messages = data.conversations[data.activeConvo].messages;
+        // this.messages = data.conversations[data.activeConvo].messages;
+        messages();
       } catch (err) {
         console.log(err);
       }
@@ -48,8 +51,8 @@ export default {
     syncMessages: async function() {
       try {
         const data = await store.dispatch("syncMessages");
-        if (data) this.messages = data.conversations[data.activeConvo].messages;
-
+        // if (data) this.messages = data.conversations[data.activeConvo].messages;
+        messages();
         console.log("synced");
       } catch (err) {
         console.log(err);

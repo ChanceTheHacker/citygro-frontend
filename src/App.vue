@@ -68,33 +68,7 @@ export default {
   data: () => ({
     drawer: null,
     text: "",
-    items: [
-      // { title: "Home", icon: "mdi-message-text", to: "/" },
-      {
-        title: "New Message",
-        icon: "mdi-message-plus",
-        to: "/new-message",
-        convoId: "0",
-        click: "0",
-      },
-      // { title: "About", icon: "mdi-message-alert", to: "/about" },
-      // { title: "Login", icon: "mdi-message-text", to: "/login" },
-    ],
   }),
-  created: async function() {
-    const conversations = await this.getConversations();
-    const array = [];
-    for (const convoId in conversations) {
-      const newItem = {};
-      newItem.title = conversations[convoId].messages[0].nickname;
-      newItem.icon = "mdi-message-text";
-      newItem.to = "/";
-      newItem.convoId = convoId;
-      newItem.click = convoId;
-      array.push(newItem);
-    }
-    this.items = this.items.concat(array);
-  },
   methods: {
     async getConversations() {
       return store.getters.getConversations;
@@ -105,13 +79,38 @@ export default {
       }
     },
   },
-  // computed: {
-  //   async setActiveConvo(info) {
-  //     if (info !== "0") {
-  //       store.dispatch("setActiveConvo", info);
-  //     }
-  //   },
-  // },
+  computed: {
+    activeConvo() {
+      return store.state.activeConvo;
+    },
+    items() {
+      const { conversations } = store.state;
+      const newArray = [];
+      const initialArray = [
+        {
+          title: "New Message",
+          icon: "mdi-message-plus",
+          to: "/new-message",
+          convoId: "0",
+          click: "0",
+        },
+      ];
+      // loop conversations and add them to a new array
+      if (!conversations.default) {
+        for (const convoId in conversations) {
+          const newItem = {};
+          newItem.title = conversations[convoId].messages[0].nickname;
+          newItem.icon = "mdi-message-text";
+          newItem.to = "/";
+          newItem.convoId = convoId;
+          newItem.click = convoId;
+          newArray.push(newItem);
+        }
+      }
+
+      return initialArray.concat(newArray);
+    },
+  },
 };
 </script>
 
