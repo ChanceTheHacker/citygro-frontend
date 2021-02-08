@@ -79,7 +79,8 @@ export default {
         const success = await store.dispatch("attemptLogin", data);
         if (success) {
           this.submitStatus = "OK";
-          router.push("/");
+          // router.push("/");
+          router.push("/new-message");
         } else {
           this.submitStatus = "ERROR";
         }
