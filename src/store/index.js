@@ -10,8 +10,8 @@ export default new Vuex.Store({
   state: {
     // just storing the userID here, will implement actual auth later to keep tokens secret
     // needless to say, but don't have any private conversations here... This is not secure
-    userId: "9049ba9f-8004-4f29-b038-757e463eab03",
-    // userId: "",
+    // userId: "9049ba9f-8004-4f29-b038-757e463eab03",
+    userId: "",
     conversations: {},
     tracking: 0,
     activeConvo: "18326597981",
