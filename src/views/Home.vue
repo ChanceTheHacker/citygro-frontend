@@ -43,7 +43,7 @@ export default {
       try {
         const data = await store.dispatch("initialize");
         // this.messages = data.conversations[data.activeConvo].messages;
-        messages();
+        // messages();
       } catch (err) {
         console.log(err);
       }
@@ -52,7 +52,7 @@ export default {
       try {
         const data = await store.dispatch("syncMessages");
         // if (data) this.messages = data.conversations[data.activeConvo].messages;
-        messages();
+        // messages();
         console.log("synced");
       } catch (err) {
         console.log(err);
