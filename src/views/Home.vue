@@ -1,18 +1,86 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <v-list class="list" shaped dense>
+      <v-list-item
+        v-for="message in messages"
+        :key="message.tracking"
+        :style="isLeft(message.to_phone)"
+      >
+        <v-list-item-content>{{ message.message }} </v-list-item-content>
+      </v-list-item>
+    </v-list>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import store from "../store/index";
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+  name: "Home",
+  components: {},
+  data: () => ({
+    messages: [],
+  }),
+  created: function() {
+    this.initialize(),
+      this.setMessages(),
+      (this.autoSync = setInterval(() => this.syncMessages(), 15000));
+  },
+  computed: {
+    // leftOrRight: function() {
+    //   console.log(this);
+    //   if (this.to_phone === "16178551376") {
+    //     return { width: "60%" };
+    //   } else {
+    //     return { width: "60%", marginLeft: "40%" };
+    //   }
+    // },
+  },
+  methods: {
+    initialize: async function() {
+      try {
+        const data = await store.dispatch("initialize");
+        this.messages = data.conversations[data.activeConvo].messages;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    syncMessages: async function() {
+      try {
+        const data = await store.dispatch("syncMessages");
+        if (data) this.messages = data.conversations[data.activeConvo].messages;
+
+        console.log("synced");
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    setMessages: async function() {},
+    isLeft: async function(phone) {
+      if (phone === "16178551376") {
+        return { width: "60%" };
+      } else {
+        return { width: "60%", marginLeft: "40%" };
+      }
+    },
+  },
+  beforeDestroy() {
+    clearInterval(this.autoSync);
+  },
+};
 </script>
+
+<style scoped>
+.home {
+  height: 100%;
+  align-content: flex-end;
+  flex-grow: 10;
+  overflow-y: scroll;
+}
+.list {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+}
+</style>
