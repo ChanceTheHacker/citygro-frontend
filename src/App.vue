@@ -102,6 +102,8 @@ export default {
         const success = await store.dispatch("attemptSendMsg", data);
         if (success) {
           this.submitStatus = "OK";
+          this.clear();
+          store.dispatch("syncMessages");
         } else {
           this.submitStatus = "ERROR";
         }
@@ -111,6 +113,10 @@ export default {
       if (info !== "0") {
         store.dispatch("setActiveConvo", info);
       }
+    },
+    clear() {
+      this.$v.$reset();
+      this.sms = "";
     },
   },
   computed: {
