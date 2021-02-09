@@ -97,7 +97,7 @@ export default {
         const data = {
           // nickname: this.name,
           to: this.activeConvo,
-          message: this.message,
+          message: this.sms,
         };
         const success = await store.dispatch("attemptSendMsg", data);
         if (success) {
