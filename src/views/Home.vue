@@ -31,7 +31,8 @@ export default {
       return store.state.activeConvo;
     },
     messages() {
-      const { conversations, activeConvo } = store.state;
+      const conversations = this.$store.getters.getConversations;
+      const activeConvo = this.$store.getters.getActiveConvo;
       if (!conversations.default) {
         const messages = conversations[activeConvo].messages;
         return messages;

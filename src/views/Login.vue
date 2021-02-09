@@ -80,7 +80,7 @@ export default {
         if (success) {
           this.submitStatus = "OK";
           // router.push("/");
-          router.push("/new-message");
+          router.push("/");
         } else {
           this.submitStatus = "ERROR";
         }

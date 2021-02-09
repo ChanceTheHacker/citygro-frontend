@@ -75,10 +75,8 @@ export default new Vuex.Store({
           }
         }
 
-        if ( newMessages ) {
           state.commit("setconversations", conversations)
           return {conversations: this.state.conversations, activeConvo: this.state.activeConvo}
-        }
         // const tracking = parseInt(conversations[conversations.length - 1].tracking)
         // tracking ? state.commit("setTracking", tracking) : console.log("Failed")
       }
@@ -96,6 +94,7 @@ export default new Vuex.Store({
   getters: {
     getUserId: state => state.userId ? state.userId : "",
     isLoggedIn: state => state.userId ? true : false,
-    getConversations: state => state.conversations
+    getConversations: state => state.conversations,
+    getActiveConvo: state => state.activeConvo
   }
 })
