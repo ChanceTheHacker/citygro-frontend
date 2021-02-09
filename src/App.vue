@@ -48,30 +48,64 @@
     </v-main>
 
     <v-footer app color="transparent" height="72" inset>
-      <v-text-field
-        v-model="text"
-        background-color="grey lighten-1"
-        dense
-        flat
-        hide-details
-        rounded
-        solo
-      ></v-text-field>
+      <v-form @submit="sendMsg">
+        <v-text-field
+          v-model="sms"
+          :error-messages="smsErrors"
+          :counter="160"
+          required
+          label=""
+          background-color="grey lighten-1"
+          dense
+          flat
+          hide-details
+          rounded
+          solo
+        ></v-text-field>
+        <v-btn type="submit">
+          Send
+        </v-btn>
+      </v-form>
     </v-footer>
   </v-app>
 </template>
 
 <script>
 import store from "./store/index";
+import { validationMixin } from "vuelidate";
+import { required, maxLength } from "vuelidate/lib/validators";
 
 export default {
+  mixins: [validationMixin],
+
+  validations: {
+    sms: { required, maxLength: maxLength(160) },
+  },
   data: () => ({
     drawer: null,
-    text: "",
+    sms: "",
   }),
   methods: {
-    async getConversations() {
-      return store.getters.getConversations;
+    async sendMsg() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.submitStatus = "ERROR";
+        console.log("broken");
+      } else {
+        // do your submit logic here
+        this.submitStatus = "PENDING";
+        const data = {
+          // nickname: this.name,
+          to: this.activeConvo,
+          message: this.message,
+        };
+        const success = await store.dispatch("attemptSendMsg", data);
+        if (success) {
+          this.submitStatus = "OK";
+        } else {
+          this.submitStatus = "ERROR";
+        }
+      }
     },
     setActiveConvo: async function(info) {
       if (info !== "0") {
@@ -82,6 +116,13 @@ export default {
   computed: {
     activeConvo() {
       return store.state.activeConvo;
+    },
+    smsErrors() {
+      const errors = [];
+      if (!this.$v.sms.$dirty) return errors;
+      !this.$v.sms.maxLength && errors.push("Can not exceed 160 characters");
+      !this.$v.sms.required && errors.push("Message is required");
+      return errors;
     },
     items() {
       const { conversations } = store.state;
