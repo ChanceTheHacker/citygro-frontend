@@ -48,7 +48,7 @@
     </v-main>
 
     <v-footer app color="transparent" height="72" inset>
-      <v-form @submit="sendMsg">
+      <v-form v-if="$route.path === '/' ? true : false" @submit="sendMsg">
         <v-text-field
           v-model="sms"
           :error-messages="smsErrors"
@@ -112,6 +112,7 @@ export default {
     setActiveConvo: async function(info) {
       if (info !== "0") {
         store.dispatch("setActiveConvo", info);
+        this.drawer = null;
       }
     },
     clear() {
