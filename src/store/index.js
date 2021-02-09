@@ -12,7 +12,8 @@ export default new Vuex.Store({
     // needless to say, but don't have any private conversations here... This is not secure
     
     userId: "",
-    // userId: "9049ba9f-8004-4f29-b038-757e463eab03",
+    // uncomment to disable log in
+    // userId: "b8f38d98-14ae-4c93-a422-0539de0f02cf",
     conversations: {default: true},
     tracking: 0,
     activeConvo: "18326597981",
