@@ -3,8 +3,11 @@
     <v-list class="list" shaped dense>
       <v-list-item
         v-for="message in messages"
-        :key="message.tracking"
-        :style="isLeft(message.to_phone)"
+        :key="message.message"
+        :class="{
+          right: isMine(message.from_phone),
+          left: isMine(message.to_phone),
+        }"
       >
         <v-list-item-content>{{ message.message }} </v-list-item-content>
       </v-list-item>
@@ -18,12 +21,9 @@ import store from "../store/index";
 export default {
   name: "Home",
   components: {},
-  data: () => ({
-    // messages: [],
-  }),
+  data: () => ({}),
   created: function() {
     this.initialize(),
-      this.setMessages(),
       (this.autoSync = setInterval(() => this.syncMessages(), 15000));
   },
   computed: {
@@ -43,8 +43,6 @@ export default {
     initialize: async function() {
       try {
         const data = await store.dispatch("initialize");
-        // this.messages = data.conversations[data.activeConvo].messages;
-        // messages();
       } catch (err) {
         console.log(err);
       }
@@ -52,20 +50,15 @@ export default {
     syncMessages: async function() {
       try {
         const data = await store.dispatch("syncMessages");
-        // if (data) this.messages = data.conversations[data.activeConvo].messages;
-        // messages();
         console.log("synced");
       } catch (err) {
         console.log(err);
       }
     },
-    setMessages: async function() {},
-    isLeft: async function(phone) {
+    isMine: function(phone) {
       if (phone === "16178551376") {
-        return { width: "60%" };
-      } else {
-        return { width: "60%", marginLeft: "40%" };
-      }
+        return true;
+      } else return false;
     },
   },
   beforeDestroy() {
@@ -86,5 +79,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-content: flex-end;
+}
+
+.left {
+  width: 60%;
+}
+
+.right {
+  width: 60%;
+  margin-left: 40%;
 }
 </style>
